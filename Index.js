@@ -6,11 +6,11 @@ var request = require("request");
 // Serial Port
 const SerialPort = require("serialport");
 
-var serialPort = new SerialPort("/dev/ttyAMA0", {
+var serialPort = new SerialPort("COM2", {
     baudRate: 9600,
     parser: new SerialPort.parsers.Readline("\n")
 });
-var serialPort1 = new SerialPort("COM2"
+var serialPort1 = new SerialPort("COM3"
 );
 
 app.get("/",function(req,res){
@@ -30,7 +30,7 @@ serialPort.on('open',function(){
     serialPort.on('data', function(data){
         console.log("=================");
         console.log(data.toString('utf8'));
-        var lData = (data.toString('utf8')).split(";");
+        var lData = (data.toString('utf8')).split(",");
         var json = {
             nd:lData[0],
             bxmt:lData[1],
@@ -43,14 +43,14 @@ serialPort.on('open',function(){
         }
         sendData(json);
     });
-   timeout();
+  // timeout();
 });
 function random(max){
     return Math.floor(Math.random() * max);
   }
 function timeout() {
     setTimeout(function () {
-        serialPort1.write(`${random(100)};${random(100)};${random(100)};${random(100)};${random(100)};${random(100)};${random(2)};${random(100)}`, function(err, results) {
+        serialPort1.write(`${random(100)},${random(100)},${random(100)},${random(100)},${random(100)},${random(100)},${random(2)},${random(100)}`, function(err, results) {
           }); 
         timeout();
     }, 5000);
